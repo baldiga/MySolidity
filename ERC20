@@ -1,0 +1,12 @@
+pragma solidity ^0.4.15;
+
+interface ERC20{
+    function totalSupply() constant returns(uint _totalSupply);
+    function balanceOf(address _owner) returns(uint _balance);
+    function transfare (address _to, uint _value) returns (bool success);
+    function transferFrom(address _to, address _from, uint _value) returns (bool success);
+    function approve(address _spender, uint _value) returns (bool success);
+    function allowance(address _owner, address _spender) constant returns(uint remainings);
+    event Transfer (address _from, address _to, uint _value);
+    event Approval (address _owner, address _spender, uint _value);
+}

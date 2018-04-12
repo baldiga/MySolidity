@@ -1,0 +1,11 @@
+pragma solidity ^0.4.15;
+
+import "browser/library.sol";
+
+contract useLibraries{
+    using intExtanded for uint;
+    
+    function testIncreent (uint _base) returns(uint){
+        return _base.increent();
+    }
+}

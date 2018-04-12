@@ -1,0 +1,55 @@
+pragma solidity ^0.4.15;
+
+import "browser/ERC20.sol";
+
+contract MyToken{
+    
+    address owner = msg.sender;
+    string constant tokenSymbol = "BMC";
+    string constant tokenName = "Baldiga Master Coin";
+    uint8 constant decimals = 18;
+    
+    uint constant totalSupply = 21000000;
+    mapping (address => uint) private BalanceOf;
+    mapping (address => mapping(address => uint)) private Allowances;
+    
+    
+    function MyToken(){
+        BalanceOf[owner] = totalSupply;
+    }
+    
+    function TotalSupply() private constant returns (uint _totalSupply){
+        _totalSupply = totalSupply;
+    }
+    function balanceOf(address _address) constant returns (uint _balance){
+        return BalanceOf[_address];
+    }
+    function transfer(address _to, uint _value) returns(bool success){
+        if (_value > 0 && _value < balanceOf(msg.sender)){
+            BalanceOf[msg.sender] -= _value;
+            BalanceOf[_to] += _value;
+            return true;
+        }
+        return false;
+        
+    }
+    function transferFrom(address _to, address _from, uint _value) returns (bool success){
+        if (Allowances[_from][msg.sender] > 0 &&
+            _value > 0 &&
+            Allowances[_from][msg.sender] >= _value){
+                BalanceOf[_from] -= _value;
+                BalanceOf[_to] += _value;
+                return true;
+            }
+                return false;
+        
+    }
+    function approve(address _spender, uint _value) returns (bool success){
+        Allowances[msg.sender][_spender] = _value;
+        return true;
+    }
+    function allowance(address _owner, address _spender) constant returns(uint remainings){
+            return Allowances[_owner][_spender];
+    }
+    
+}

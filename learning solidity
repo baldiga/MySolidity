@@ -1,0 +1,10 @@
+pragma solidity ^0.4.14;
+
+contract ERC20 {
+    
+ function transfare (address _to, uint _value) returns (bool success);
+ function approve(address _spender, uint _value) returns (bool success);
+ function allowance(address _owner, address _spender) constant returns(uint remainings);
+   event Approval (address _owner, address _spender, uint _value);
+  
+}

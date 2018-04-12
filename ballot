@@ -1,0 +1,72 @@
+pragma solidity ^0.4.15;
+
+contract Baldigeek {
+    
+    address BaldigeekAdmin;
+    
+    mapping (bytes32 => notorizedImage) NoImages;
+    bytes32[] imageByHash;
+    mapping (address => User) Users;
+    address[] usersByAddress;
+    
+    struct notorizedImage {
+        string imageURL;
+        uint timeStamp;
+    }
+    struct User{
+        string handle;
+        bytes32 city;
+        bytes32 state;
+        bytes32 country;
+        bytes32 [] myImages;
+    }
+    function registerNewUser (string handle, bytes32 city, bytes32 state, bytes32 country) public returns (bool success){
+        address thisNewUserAddress = msg.sender;
+        if (bytes(Users[msg.sender].handle).length == 0 && bytes(handle).length != 0){
+            Users[thisNewUserAddress].handle = handle;
+            Users[thisNewUserAddress].city = city;
+            Users[thisNewUserAddress].state = state;
+            Users[thisNewUserAddress].country = country;
+            usersByAddress.push(thisNewUserAddress);
+            return true;
+        }
+        return false;
+    }
+    function addImageToUser (string imageURL, bytes32 _256NoHash) public returns (bool success){
+        address thisNewUserAddress = msg.sender;
+        if (bytes(Users[thisNewUserAddress].handle).length == 0){
+            if (bytes(imageURL).length != 0){
+                if (bytes(NoImages[_256NoHash].imageURL).length == 0)
+                    imageByHash.push(_256NoHash);
+                
+                NoImages[_256NoHash].imageURL = imageURL;
+                NoImages[_256NoHash].timeStamp = block.timestamp;
+                Users[thisNewUserAddress].myImages.push(_256NoHash);
+                return true;
+            }
+            else return false;
+        
+            return true;
+        }
+        else return false;
+    }
+    function getUsers() public constant returns (address[]) {return usersByAddress;}
+    
+    function getUser(address userAddress) public constant returns (string, bytes32, bytes32, bytes32, bytes32[]){
+        return (Users[userAddress].handle, Users[userAddress].city, Users[userAddress].state, Users[userAddress].country, Users[userAddress].myImages);
+    }
+    function getAllImages() public constant returns (bytes32[]) {return imageByHash;}
+    
+    function getUserImages(address userAddress) public constant returns (bytes32[]) { return Users[userAddress].myImages;}
+    
+    function getImage (bytes32 _256NoHash) public constant returns (string, uint){
+        return (NoImages[_256NoHash].imageURL, NoImages[_256NoHash].timeStamp);
+    }
+}
+    
+
+
+
+
+
+

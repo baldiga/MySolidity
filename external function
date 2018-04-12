@@ -1,0 +1,18 @@
+pragma solidity ^0.4.19;
+
+contract EternalVsPublic{
+    
+    // using eternal func saves the value in the stack not on the memory, means its cheaper.
+    // an func with no value passed in can be costly over a public one.
+    function ExternalCall() external returns(uint){
+        return 123;
+    }
+    function publicCall() public returns(uint){
+        return 123;
+    }
+    
+    // to call external func the "this." is needed.
+    function callExternalCall() public{
+        this.ExternalCall();
+    }
+}

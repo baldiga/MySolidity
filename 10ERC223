@@ -1,0 +1,7 @@
+pragma solidity ^0.4.14;
+
+contract ERC223{
+    
+    function transfer(address _to, int _value, bytes _date) public returns(bool);
+    event Transfer(address indexed from, address indexed to, uint value, bytes indexed data);
+}

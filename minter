@@ -1,0 +1,21 @@
+pragma solidity ^0.4.15;
+contract Coin {
+address public minter;
+mapping ( address => uint) public balance;
+event Sent (address from, address to, uint amount);
+
+function Coin() public{
+minter = msg.sender;
+}
+function mint (address reciver, uint amount) public{
+if (msg.sender != minter) return;
+balance[reciver] += amount;
+}
+function send (address to, uint amount) public payable{
+if (balance[msg.sender] <amount) return;
+balance[msg.sender] -= amount;
+balance[to] += amount;
+Sent(msg.sender, to, amount);
+}
+
+}

@@ -1,0 +1,38 @@
+pragma solidity ^0.4.19;
+
+contract TimeBased{
+    
+    mapping (address => uint) public _BalanceOf;
+    mapping (address => uint) public _expiryOf;
+    
+    uint private leaseTime = 600;
+    
+    modifier expire(address _addr){
+        if (_expiryOf[_addr] >= block.timestamp + leaseTime)
+        _expiryOf[_addr] = 0;
+        _BalanceOf[_addr] = 0;
+        _;
+    }
+    
+    function lease() public payable expire(msg.sender) returns(bool){
+            require (msg.value == 1 ether);
+            require (_BalanceOf[msg.sender] == 0);
+            _BalanceOf[msg.sender] = 1;
+            _expiryOf[msg.sender] = block.timestamp + leaseTime;
+            return true;
+    }
+    
+    function senderBalanceOf() public expire(msg.sender) returns (uint){
+        return _BalanceOf[msg.sender];
+        
+    }
+    function balcneOf(address _addr) public expire(_addr) returns (uint){
+        return _BalanceOf[_addr];
+    }
+    function senderExpiryOf() public expire(msg.sender) returns (uint){
+        return _expiryOf[msg.sender];
+    }
+    function expiryOf(address _addr) public expire(_addr) returns (uint){
+        return _expiryOf[_addr];
+    }
+}

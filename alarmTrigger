@@ -1,0 +1,39 @@
+pragma solidity ^0.4.19;
+
+interface AlarmWakeUp{
+    function callBack(bytes date) public;
+}
+contract AlarmService{
+    
+    struct TimeEvent{
+        address addr;
+        bytes data;
+    }
+    mapping (uint => TimeEvent[]) private _events;
+    
+    function set(uint _time) public returns(bool){
+        TimeEvent timeEvent;
+        timeEvent.addr = msg.sender;
+        timeEvent.data = msg.data;
+        _events[_time].push(timeEvent);
+    }
+    function call(uint _time) public {
+        TimeEvent[] _timeEvent = _events[_time];
+        for (uint i=0; i < _timeEvent.length; i++){
+            AlarmWakeUp(_timeEvent[i].addr).callBack(_timeEvent[i].data);
+        }
+    }
+}
+
+contract AlaarmTrigger is AlarmService{
+    
+    AlarmService  private _alarmService;
+    function callBack() public;
+    
+    function AlaarmTrigger() public  {
+        _alarmService = new AlarmService();
+    }
+    function setAlarm() public{
+        _alarmService.set(block.timestamp+60);
+    }
+}

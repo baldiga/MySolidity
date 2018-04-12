@@ -1,0 +1,48 @@
+pragma solidity ^0.4.19;
+
+contract Assembly{
+    
+    function nativeLoop() public returns (uint _r){
+        for (uint i=0; i < 10; i++){
+            _r ++;
+        }
+    }
+    function AssLoop() public returns (uint _r){
+        assembly {
+            let i:= 0
+            loop:
+            i := add(i, 1)
+            _r := add(_r, 1)
+            jumpi(loop, lt(i, 10))
+        }
+    }
+    function nativeCondition (uint _v) public returns(uint){
+        if (_v ==5) return 55;
+        if (_v == 6) return 66;
+        return 11;
+    }
+    function assCondition (uint _v) public returns (uint _r){
+        assembly{
+            switch _v
+            case 5{
+                _r := 55
+            }
+            case 6{
+                _r := 66
+            }
+            default{
+                _r := 11
+            }
+            
+        }
+       
+    }
+    function functionalReturn(uint _v) returns (uint) {
+        assembly {
+            let ptr := add(msize(),1)
+            mstore(ptr, _v)
+            mstore(add(ptr, 0x20), _v)
+            return(ptr, 0x40)
+        }
+    }
+}
